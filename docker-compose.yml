@@ -3,7 +3,6 @@ version: '3.7'
 services:
   appmongo:
     build: .
-    restart: always
     command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
     volumes:
       - ./:/app/
@@ -14,22 +13,18 @@ services:
     depends_on:
       - db
 
-
   db:
-    image: postgres:12.0-alpine
+    image: mongo
     environment:
-      POSTGRES_USER: user_root
-      POSTGRES_PASSWORD: pass_root
-      POSTGRES_DB: projetinho
+      MONGO_INITDB_ROOT_USERNAME: user_root
+      MONGO_INITDB_ROOT_PASSWORD: pass_root
     ports:
-      - 5433:5433
+      - 27017:27017
     volumes:
-      - ./data_db/:/var/lib/postgresql/data/
-    command: -p 5433
+      - ./data_db/:/data/db/
     networks:
       - db-network
 
-
 networks:
-    db-network:
-      driver: bridge
+  db-network:
+    driver: bridge
