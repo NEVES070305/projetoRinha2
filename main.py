@@ -63,14 +63,3 @@ def count_pessoas():
 def teste_db():
     ping = client.server_info()
     return {"ping": ping}
-
-@app.get('/pessoas')
-def search_people_by_term(t: str = Query(..., min_length=1, alias='term')):
-    results = list(db.find({
-        "$or": [
-            {"apelido": {"$regex": t, "$options": "i"}},
-            {"nome": {"$regex": t, "$options": "i"}},
-            {"stack": {"$elemMatch": {"$regex": t, "$options": "i"}}}
-        ]
-    }))
-    return results
